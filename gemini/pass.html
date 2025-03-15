@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login For Prince 2.o Gemini</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&" />
+    <link rel="icon" href="https://i.pinimg.com/474x/2e/4f/d3/2e4fd3fd8f2aff9c26b15c1f1c23b11e.jpg" type="image/x-icon">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f9;
+            margin: 0;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .dark-theme {
+            background-color: #333333;
+            color: #ffffff;
+        }
+        .login-container {
+            background: #ffffff;
+            padding: 40px 30px;
+            width: 380px;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            position: relative;
+        }
+        .dark-theme .login-container {
+            background: #444444;
+        }
+        .login-container img {
+            width: 100px;
+            height: auto;
+            margin-bottom: 15px;
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 25px;
+            background: linear-gradient(to right, #4796E3, #9177C7, #CA6673);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #000;
+            background-color: #fff;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .dark-theme input[type="text"], .dark-theme input[type="password"] {
+            color: #fff;
+            background-color: #333;
+        }
+        input[type="text"]:focus, input[type="password"]:focus {
+            border: 1px solid #007BFF;
+            outline: none;
+        }
+        .password-wrapper {
+            position: relative;
+            width: 100%;
+        }
+        button {
+            background: linear-gradient(to right, #4796E3, #CA6673);
+            color: #ffffff;
+            padding: 12px 18px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            margin-top: 15px;
+        }
+        button:hover {
+            opacity: 0.9;
+        }
+        a {
+            color: #007BFF;
+            text-decoration: none;
+            font-size: 14px;
+            display: inline-block;
+            margin-top: 15px;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .theme-toggle-btn {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #007BFF;
+        }
+        .theme-toggle-btn:hover {
+            color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <span id="themeToggle" class="material-symbols-outlined theme-toggle-btn">light_mode</span>
+        <img src="https://cdn-icons-png.flaticon.com/512/5087/5087579.png" alt="User Icon">
+        <h1>Login For Prince 2.o Gemini</h1>
+        <input type="text" id="usernameInput" value="Prince123" autocomplete="off">
+        <div class="password-wrapper">
+            <input type="password" id="passwordInput" value="123" autocomplete="off">
+        </div>
+        <button onclick="checkLogin()">Login</button>
+        <a href="#" onclick="goToForgetPage()">Forgot Password?</a>
+    </div>
+
+    <script>
+        const VALID_USERNAME = "Prince123";
+        const VALID_PASSWORD = "123";
+
+        function togglePasswordVisibility() {
+            const passwordField = document.getElementById("passwordInput");
+            passwordField.type = passwordField.type === "password" ? "text" : "password";
+        }
+
+        function checkLogin() {
+            const usernameField = document.getElementById("usernameInput");
+            const passwordField = document.getElementById("passwordInput");
+
+            const username = usernameField.value.trim();
+            const password = passwordField.value.trim();
+
+            if (username === VALID_USERNAME && password === VALID_PASSWORD) {
+                const newWindow = window.open("http://127.0.0.1:5501/gemini/gemini.html", "_blank");
+                if (newWindow) {
+                    window.close();
+                } else {
+                    alert("Auto-close blocked by browser. Please close the login tab manually.");
+                }
+            } else {
+                alert("Username or password not matched. Please check your credentials.");
+            }
+        }
+
+        function goToForgetPage() {
+            const forgetPage = window.open("http://127.0.0.1:5501/gemini/forget.html", "_blank");
+            if (forgetPage) {
+                window.close();
+            } else {
+                alert("Unable to auto-close this tab. Please close it manually.");
+            }
+        }
+
+        // Logic to handle returning back to login from the forget page
+        function goBackToLoginPage() {
+            const loginPage = window.open("http://127.0.0.1:5501/gemini/login.html", "_blank");
+            if (loginPage) {
+                window.close();
+            } else {
+                alert("Unable to auto-close the Forget page. Please close it manually.");
+            }
+        }
+
+        const themeToggle = document.getElementById("themeToggle");
+        themeToggle.addEventListener("click", () => {
+            const body = document.body;
+            const isDarkMode = body.classList.toggle("dark-theme");
+            themeToggle.textContent = isDarkMode ? "dark_mode" : "light_mode";
+            localStorage.setItem("theme", isDarkMode ? "dark" : "light");
+        });
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const savedTheme = localStorage.getItem("theme");
+            if (savedTheme === "dark") {
+                document.body.classList.add("dark-theme");
+                themeToggle.textContent = "dark_mode";
+            }
+        });
+    </script>
+</body>
+</html>

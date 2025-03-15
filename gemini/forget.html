@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forgot Password with OTP</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+    <link rel="icon" href="https://i.pinimg.com/736x/bd/70/d0/bd70d000ec9b645d070fb1b0c0989f9d.jpg" type="image/x-icon">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f9;
+            margin: 0;
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+        .forgot-container {
+            background: #ffffff;
+            padding: 30px;
+            width: 350px;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            position: relative;
+        }
+        img {
+            width: 100px;
+            margin-bottom: 15px;
+        }
+        input {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background: linear-gradient(to right, #4796E3, #CA6673);
+            color: #ffffff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .back-to-login {
+            margin-top: 10px;
+            color: blue;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        .error-message {
+            color: red;
+            font-size: 12px;
+            margin-top: -8px;
+            margin-bottom: 10px;
+            text-align: left;
+            width: 90%;
+        }
+        .timer {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        .hidden {
+            display: none;
+        }
+        #toggleMode {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: #ffffff;
+            color: #000000;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 24px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+        .night-mode {
+            background-color: #1e1e1e;
+            color: #ffffff;
+        }
+        .forgot-container.night-mode {
+            background-color: #333333;
+        }
+    </style>
+</head>
+<body>
+    <div class="forgot-container">
+        <button id="toggleMode" class="material-symbols-outlined">light_mode</button>
+        <!-- Centered Image -->
+        <img src="https://cdn-icons-png.flaticon.com/512/5087/5087579.png" alt="Forgot Password Icon">
+        <h1>Forgot Password</h1>
+
+        <!-- Username Input -->
+        <input type="text" id="username" placeholder="Enter Username" autocomplete="off">
+        <p id="usernameError" class="error-message hidden">This field is mandatory</p>
+
+        <!-- Phone Number Input -->
+        <input type="text" id="phoneNumber" placeholder="Enter Phone Number" autocomplete="off">
+        <p id="phoneError" class="error-message hidden">This field is mandatory</p>
+
+        <!-- Send OTP Button -->
+        <button onclick="sendOTP()">Send OTP</button>
+        <!-- Back to Login Page -->
+        <p class="back-to-login" onclick="backToLogin()">Back to Login Page</p>
+
+        <div id="otpSection" class="hidden">
+            <input type="text" id="otpInput" placeholder="Enter OTP" autocomplete="off">
+            <button onclick="verifyOTP()">Verify OTP</button>
+            <p class="timer" id="otpTimer"></p>
+            <button onclick="resendOTP()">Resend OTP</button>
+        </div>
+
+        <div id="resetSection" class="hidden">
+            <input type="password" id="newPassword" placeholder="Enter New Password" autocomplete="off">
+            <p id="passwordError" class="error-message hidden">This field is mandatory</p>
+            <button onclick="resetPassword()">Update Password</button>
+        </div>
+    </div>
+
+    <script>
+        const toggleButton = document.getElementById("toggleMode");
+
+        toggleButton.addEventListener("click", () => {
+            document.body.classList.toggle("night-mode");
+            document.querySelector(".forgot-container").classList.toggle("night-mode");
+            toggleButton.textContent = document.body.classList.contains("night-mode") ? "dark_mode" : "light_mode";
+        });
+
+        let generatedOTP = null;
+        let timer = null;
+        let timeLeft = 30; // 30 seconds for OTP validity
+
+        function sendOTP() {
+            const username = document.getElementById("username").value.trim();
+            const phoneNumber = document.getElementById("phoneNumber").value.trim();
+
+            // Reset error messages
+            document.getElementById("usernameError").classList.add("hidden");
+            document.getElementById("phoneError").classList.add("hidden");
+
+            // Validate inputs
+            let hasError = false;
+
+            if (!username) {
+                document.getElementById("usernameError").classList.remove("hidden");
+                hasError = true;
+            }
+            if (!phoneNumber) {
+                document.getElementById("phoneError").classList.remove("hidden");
+                hasError = true;
+            }
+
+            if (hasError) {
+                return; // Stop if validation fails
+            }
+
+            // Generate a random 6-digit OTP
+            generatedOTP = Math.floor(100000 + Math.random() * 900000);
+            console.log("Your OTP is:", generatedOTP); // Display in console for testing
+
+            alert(`OTP sent to ${phoneNumber}!`);
+
+            // Show OTP section
+            document.getElementById("otpSection").classList.remove("hidden");
+
+            // Start OTP timer
+            timeLeft = 30; // Reset timer
+            startOTPTimer();
+        }
+
+        function startOTPTimer() {
+            const timerDisplay = document.getElementById("otpTimer");
+            timerDisplay.textContent = `OTP expires in ${timeLeft} seconds.`;
+
+            timer = setInterval(() => {
+                timeLeft--;
+                if (timeLeft > 0) {
+                    timerDisplay.textContent = `OTP expires in ${timeLeft} seconds.`;
+                } else {
+                    clearInterval(timer);
+                    generatedOTP = null; // Invalidate OTP
+                    timerDisplay.textContent = "OTP has expired. Please resend.";
+                }
+            }, 1000);
+        }
+
+        function verifyOTP() {
+            const enteredOTP = document.getElementById("otpInput").value.trim();
+
+            if (generatedOTP && parseInt(enteredOTP) === generatedOTP) {
+                alert("OTP verified successfully!");
+
+                // Show reset password section and hide OTP section
+                document.getElementById("resetSection").classList.remove("hidden");
+                document.getElementById("otpSection").classList.add("hidden");
+                clearInterval(timer); // Stop timer
+            } else {
+                alert("Invalid or expired OTP. Please try again.");
+            }
+        }
+
+        function resendOTP() {
+            // Stop the previous timer and invalidate the old OTP
+            clearInterval(timer);
+            generatedOTP = null;
+
+            sendOTP(); // Send a new OTP
+        }
+
+        function resetPassword() {
+            const newPassword = document.getElementById("newPassword").value.trim();
+
+            // Reset error messages
+            document.getElementById("passwordError").classList.add("hidden");
+
+            // Validate password
+            if (!newPassword) {
+                document.getElementById("passwordError").classList.remove("hidden");
+                return; // Stop if validation fails
+            }
+
+            alert("Password updated successfully!");
+            // Redirect to login page
+            window.open("http://127.0.0.1:5501/gemini/pass.html", "_self");
+        }
+
+        function backToLogin() {
+            // Redirect to the login page
+            window.open("http://127.0.0.1:5501/gemini/pass.html", "_self");
+        }
+    </script>
+</body>
+</html>

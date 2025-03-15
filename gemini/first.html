@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="https://i.pinimg.com/736x/bd/70/d0/bd70d000ec9b645d070fb1b0c0989f9d.jpg" type="image/x-icon">
+  <title>First intro</title>
+  <style>
+    /* Full-screen styling for the splash screen */
+    body {
+      margin: 0;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: 100vh;
+      background: linear-gradient(to bottom right, #4796E3, #CA6673); /* Gradient background */
+      color: white;
+    }
+
+    #logo {
+      font-size: 4em; /* Larger size for "PRINCE2.o" */
+      font-weight: bold;
+      text-align: center;
+      color: #ffffff; /* Base text color */
+      text-shadow: 
+        0 0 20px #4796E3, 
+        0 0 40px #CA6673, 
+        0 0 60px #4796E3, 
+        0 0 80px #CA6673; /* Glowing effect */
+      animation: smoothEnter 2s ease-out forwards; /* Smooth animation */
+    }
+
+    #subtitle {
+      font-size: 1.5em; /* Smaller size for "YOUR ADVANCED AI" */
+      margin-top: 10px; /* Adds spacing below "PRINCE2.o" */
+      text-align: center;
+      color: #ffffff;
+      opacity: 0;
+      animation: fadeIn 2s ease-out 1s forwards; /* Smooth fade-in animation */
+    }
+
+    /* Keyframes for smooth entering text effect */
+    @keyframes smoothEnter {
+      0% {
+        transform: scale(1); /* Normal size */
+        opacity: 1; /* Fully visible */
+        text-shadow: 
+          0 0 10px #CA6673, 
+          0 0 20px #4796E3, 
+          0 0 30px #CA6673, 
+          0 0 40px #4796E3;
+      }
+      100% {
+        transform: scale(7); /* Fully zoomed */
+        opacity: 0; /* Fully faded out */
+        text-shadow: 
+          0 0 50px #4796E3, 
+          0 0 70px #CA6673, 
+          0 0 100px #4796E3, 
+          0 0 150px #CA6673;
+      }
+    }
+
+    /* Keyframes for subtitle fade-in */
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Background circle styling */
+    .circle {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      animation: moveCircles 2s ease-in-out;
+    }
+
+    /* Circle animation (runs once) */
+    @keyframes moveCircles {
+      0% {
+        transform: scale(0) translate(-50%, -50%);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(2) translate(-50%, -50%);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Splash screen content -->
+  <div id="logo">PRINCE2.o</div>
+  <div id="subtitle">YOUR ADVANCED AI ASSISTANT</div>
+
+  <!-- Background animated circles -->
+  <div class="circle" style="width: 80px; height: 80px; top: 15%; left: 25%;"></div>
+  <div class="circle" style="width: 100px; height: 100px; top: 35%; left: 55%;"></div>
+  <div class="circle" style="width: 120px; height: 120px; top: 65%; left: 15%;"></div>
+  <div class="circle" style="width: 90px; height: 90px; top: 45%; left: 75%;"></div>
+  <div class="circle" style="width: 110px; height: 110px; top: 10%; left: 60%;"></div>
+
+  <script>
+    // Transition to the next HTML page after the animation finishes
+    setTimeout(() => {
+      window.location.href = "http://127.0.0.1:5501/gemini/pass.html"; // Replace with your target link
+    }, 2000); // 2 seconds delay after animation
+  </script>
+</body>
+</html>
